@@ -241,6 +241,9 @@ class FlutterMentions extends StatefulWidget {
   /// {@macro flutter.services.autofill.autofillHints}
   final Iterable<String>? autofillHints;
 
+
+
+
   @override
   FlutterMentionsState createState() => FlutterMentionsState();
 }
@@ -372,9 +375,14 @@ class FlutterMentionsState extends State<FlutterMentions> {
 
   @override
   void initState() {
+    super.initState();
     final data = mapToAnotation();
 
     controller = AnnotationEditingController(data);
+    // ..text="#newone "
+    //   ..setTextStyle(DetectedType.hashtag, TextStyle(color: Colors.blue, fontWeight: FontWeight.w600));
+    //
+    // streamSubscription = controller!.subscribeToDetection(onDetectContent);
 
     if (widget.defaultText != null) {
       controller!.text = widget.defaultText!;
@@ -385,11 +393,14 @@ class FlutterMentionsState extends State<FlutterMentions> {
 
     controller!.addListener(inputListeners);
 
-    super.initState();
+
   }
+
+
 
   @override
   void dispose() {
+    // streamSubscription.cancel();
     controller!.removeListener(suggestionListerner);
     controller!.removeListener(inputListeners);
 
@@ -406,6 +417,8 @@ class FlutterMentionsState extends State<FlutterMentions> {
   @override
   Widget build(BuildContext context) {
     // Filter the list based on the selection
+    var height = MediaQuery.of(context).size.height * 0.4;
+
     final list = _selectedMention != null
         ? widget.mentions.firstWhere(
             (element) => _selectedMention!.str.contains(element.trigger))
@@ -444,10 +457,11 @@ class FlutterMentionsState extends State<FlutterMentions> {
           },
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             ...widget.leading,
             Expanded(
-              child: TextField(
+              child:detectableText.DetectableTextField(
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 maxLength: widget.maxLength,
@@ -456,7 +470,7 @@ class FlutterMentionsState extends State<FlutterMentions> {
                 keyboardAppearance: widget.keyboardAppearance,
                 textInputAction: widget.textInputAction,
                 textCapitalization: widget.textCapitalization,
-                style: widget.style,
+                // style: widget.style,
                 textAlign: widget.textAlign,
                 textDirection: widget.textDirection,
                 readOnly: widget.readOnly,
@@ -480,7 +494,10 @@ class FlutterMentionsState extends State<FlutterMentions> {
                 scrollController: widget.scrollController,
                 scrollPadding: widget.scrollPadding,
                 scrollPhysics: widget.scrollPhysics,
-                controller: controller,
+                controller: controller, detectionRegExp: RegExp(
+                "(?!\\n)(?:^|\\s)([#@]([$detectionContentLetters]+))",
+                multiLine: true,
+              ),
               ),
             ),
             ...widget.trailing,
