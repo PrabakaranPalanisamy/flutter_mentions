@@ -53,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
               suggestionPosition: SuggestionPosition.Top,
               maxLines: 5,
               minLines: 1,
+              style: TextStyle(color: Colors.amber),
+              decoratedStyle: TextStyle(color: Colors.deepOrange),
               decoration: InputDecoration(hintText: 'hello'),
               mentions: [
                 Mention(

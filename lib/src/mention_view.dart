@@ -19,6 +19,7 @@ class FlutterMentions extends StatefulWidget {
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
     this.style,
+    this.decoratedStyle,
     this.strutStyle,
     this.textAlign = TextAlign.start,
     this.textDirection,
@@ -122,6 +123,13 @@ class FlutterMentions extends StatefulWidget {
   ///
   /// If null, defaults to the `subtitle1` text style from the current [Theme].
   final TextStyle? style;
+
+ /// The style to use for the text being decorated.
+  ///
+  /// This text style is also used as the base style for the [decoration].
+  ///
+  /// If null, defaults to the `subtitle1` text style from the current [Theme].
+  final TextStyle? decoratedStyle;
 
   /// {@macro flutter.widgets.editableText.strutStyle}
   final StrutStyle? strutStyle;
@@ -462,6 +470,8 @@ class FlutterMentionsState extends State<FlutterMentions> {
             ...widget.leading,
             Expanded(
               child:detectableText.DetectableTextField(
+                decoratedStyle: widget.decoratedStyle,
+                basicStyle: widget.style,
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 maxLength: widget.maxLength,
